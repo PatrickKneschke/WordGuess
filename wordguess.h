@@ -2,7 +2,7 @@
 #define WORDGUESS_H
 
 
-#include <QSize>
+#include <QKeyEvent>
 #include <QWidget>
 
 
@@ -14,9 +14,21 @@ class WordGuess : public QWidget {
 public:
 	WordGuess(QWidget *parent = nullptr);
 	~WordGuess();
+	
+	void keyPressEvent(QKeyEvent *event) override;
 
 private:
-	UI::WordGuess *ui;
+	void nextSecretWord();
+	void addLetterToBoard(QString s);
+	void removeLetterFromBoard();
+	void evaluateBoard();
+	void revealWord();
+	void reset();
+
+	UI::WordGuess *ui;	
+	QString 	  secretWord;
+	unsigned int  attempt,
+				  currLetter;
 };
 
 

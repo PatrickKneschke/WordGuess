@@ -24,9 +24,9 @@ public:
 		answerLayout = new QGridLayout(answerFrame);
 		
 		// create and place board labels
-		for(int i=0; i<6*5; i++) {
+		for(int i=0; i<wordLength*maxAttempts; i++) {
 			boardLabel[i] = makeLabel(boardFrame, "", QFrame::Panel | QFrame::Sunken, 100, 30);
-			boardLayout->addWidget(boardLabel[i], i/5, i%5);
+			boardLayout->addWidget(boardLabel[i], i/wordLength, i%wordLength);
 		}
 		
 		// create and place letter labels
@@ -42,11 +42,11 @@ public:
 		}
 		
 		//create and place answer labels
-		for(int i=0; i<5; i++) {
+		for(int i=0; i<wordLength; i++) {
 			answerLabel[i] = makeLabel(answerFrame, "", QFrame::Panel | QFrame::Raised, 100, 30);
 			answerLayout->addWidget(answerLabel[i], 1, 2*i, 2, 2);
 		}
-		messageLabel = makeLabel(answerFrame, "Correct Answer:", QFrame::Plain, 100, 30);
+		messageLabel = makeLabel(answerFrame, "Correct Answer:", QFrame::Plain, 75, 20);
 		answerLayout->addWidget(messageLabel, 0, 0, 1, 10);
 		
 		// place frames in main layout
@@ -57,6 +57,9 @@ public:
 		
 	}
 	
+		   
+	static constexpr int wordLength  = 5;
+	static constexpr int maxAttempts = 6;
 	
 	QGridLayout *mainLayout,
 				*boardLayout,
@@ -65,9 +68,9 @@ public:
 	QFrame *boardFrame,
 		   *letterFrame,
 		   *answerFrame;
-	QLabel *boardLabel[6*5],
+	QLabel *boardLabel[wordLength*maxAttempts],
 		   *letterLabel[26],
-		   *answerLabel[5],
+		   *answerLabel[wordLength],
 		   *messageLabel;
 
 private:
