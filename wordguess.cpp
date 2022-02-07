@@ -3,7 +3,6 @@
 #include "ui_wordguess.h"
 
 #include <QDebug>
-#include <QFile>
 #include <QTextStream>
 
 #include <random>
@@ -76,7 +75,7 @@ void WordGuess::nextSecretWord() {
 	std::uniform_int_distribution<int> distribution(0, answers.size()-1);
 		
 	// pull random word and transfer to answer labels in ui
-	secretWord = answers[distribution(generator)];
+	secretWord = answers[distribution(generator)].toUpper();
 	for(int i=0; i<secretWord.length(); i++)
 		ui->answerLabel[i]->setText(QString(secretWord[i]).toUpper());
 }
@@ -97,8 +96,35 @@ void WordGuess::removeLetterFromBoard() {
 }
 
 
-void WordGuess::evaluateBoard() {
-
+void WordGuess::evaluateBoard() {	
+	if(currLetter < ui->wordLength)
+		return;
+	
+	int matches = 0;	
+	for(size_t i=0; i<ui->wordLength; i++) {
+		QChar curr = ui->boardLabel[attempt*ui->wordLength + i]->text().at(0);	
+		
+		qDebug() << curr << secretWord.at(i);
+			
+		if(curr == secretWord.at(i)) {
+			++matches;
+			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(50, 200, 50)}");
+			ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(50, 200, 50)}");
+		}
+		else if(secretWord.contains(curr)) {
+			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(200, 200, 50)}");
+			ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(200, 200, 50)}");
+		}
+		else {
+			ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(50, 50, 50)}");
+		}
+	}
+	
+	currLetter = 0;	
+	++attempt;
+	if(attempt >= ui->maxAttempts)
+		revealWord();
+	
 }
 
 
