@@ -18,6 +18,9 @@ public:
 	void keyPressEvent(QKeyEvent *event) override;
 
 private:
+	void init();
+	void readWordList(const QString &filename, QVector<QString> &list);
+	
 	void nextSecretWord();
 	void addLetterToBoard(QString s);
 	void removeLetterFromBoard();
@@ -25,10 +28,13 @@ private:
 	void revealWord();
 	void reset();
 
-	UI::WordGuess *ui;	
-	QString 	  secretWord;
-	unsigned int  attempt,
-				  currLetter;
+
+	UI::WordGuess    *ui;
+	QVector<QString> answers,
+					 allowed;
+	QString 	  	 secretWord;
+	unsigned int  	 attempt,
+				  	 currLetter;
 };
 
 
