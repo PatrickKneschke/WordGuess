@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QTextStream>
 
+#include <algorithm>
 #include <random>
 
 
@@ -103,25 +104,36 @@ void WordGuess::removeLetterFromBoard() {
 }
 
 
-void WordGuess::evaluateBoard() {	
+void WordGuess::evaluateBoard() {
+	// check valid word length	
 	if(currLetter < ui->wordLength)
 		return;
+		
+	// check if word is allowed
+	QString guessWord = "";
+	for(int i=0; i<ui->wordLength; i++) {
+		guessWord += ui->boardLabel[attempt*ui->wordLength + i]->text();
+	}
+	if( !std::binary_search(allowed.begin(), allowed.end(), guessWord.toLower()) &&
+		!std::binary_search(allowed.begin(), allowed.end(), guessWord.toLower()) ) {
+		return;
+	}
 	
+	// check for letter matches
 	int matches = 0;	
 	for(size_t i=0; i<ui->wordLength; i++) {
-		QChar curr = ui->boardLabel[attempt*ui->wordLength + i]->text().at(0);	
-		if(curr == secretWord.at(i)) {
+		if(guessWord.at(i) == secretWord.at(i)) {
 			++matches;
 			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(70, 210, 70)}");
-		ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(70, 210, 70)}");
+			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(70, 210, 70)}");
 		}
-		else if(secretWord.contains(curr)) {
+		else if(secretWord.contains(guessWord.at(i))) { 
 			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(210, 210, 70)}");
-		ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(210, 210, 70)}");
+			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(210, 210, 70)}");
 		}
 		else {
 			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(100, 100, 100)}");
-		ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(100, 100, 100)}");
+			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(100, 100, 100)}");
 		}
 	}
 	
