@@ -90,8 +90,8 @@ void WordGuess::nextSecretWord() {
 
 
 void WordGuess::addLetterToBoard(QString s) {
-	if(currLetter < ui->wordLength) {
-		ui->boardLabel[attempt*ui->wordLength + currLetter]->setText(s);
+	if(currLetter < UI::wordLength) {
+		ui->boardLabel[attempt*UI::wordLength + currLetter]->setText(s);
 		++currLetter;
 	}
 }
@@ -100,46 +100,46 @@ void WordGuess::addLetterToBoard(QString s) {
 void WordGuess::removeLetterFromBoard() {
 	if(currLetter > 0)
 		--currLetter;
-	ui->boardLabel[attempt*ui->wordLength + currLetter]->setText("");
+	ui->boardLabel[attempt*UI::wordLength + currLetter]->setText("");
 }
 
 
 void WordGuess::evaluateBoard() {
 	// check valid word length	
-	if(currLetter < ui->wordLength)
+	if(currLetter < UI::wordLength)
 		return;
 		
 	// check if word is allowed
 	QString guessWord = "";
-	for(int i=0; i<ui->wordLength; i++) {
-		guessWord += ui->boardLabel[attempt*ui->wordLength + i]->text();
-	}
+	for(int i=0; i<UI::wordLength; i++) {
+		guessWord += ui->boardLabel[attempt*UI::wordLength + i]->text();
+	}	
 	if( !std::binary_search(allowed.begin(), allowed.end(), guessWord.toLower()) &&
-		!std::binary_search(allowed.begin(), allowed.end(), guessWord.toLower()) ) {
+		!std::binary_search(answers.begin(), answers.end(), guessWord.toLower()) ) {
 		return;
 	}
 	
 	// check for letter matches
 	int matches = 0;	
-	for(size_t i=0; i<ui->wordLength; i++) {
+	for(size_t i=0; i<UI::wordLength; i++) {
 		if(guessWord.at(i) == secretWord.at(i)) {
 			++matches;
-			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(70, 210, 70)}");
-			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(70, 210, 70)}");
+			ui->boardLabel[attempt*UI::wordLength + i]->setStyleSheet(UI::matchStyle);
+			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet(UI::matchStyle);
 		}
 		else if(secretWord.contains(guessWord.at(i))) { 
-			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(210, 210, 70)}");
-			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(210, 210, 70)}");
+			ui->boardLabel[attempt*UI::wordLength + i]->setStyleSheet(UI::presentStyle);
+			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet(UI::presentStyle);
 		}
 		else {
-			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(100, 100, 100)}");
-			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(100, 100, 100)}");
+			ui->boardLabel[attempt*UI::wordLength + i]->setStyleSheet(UI::notPresentStyle);
+			ui->letterLabel[guessWord.at(i).unicode()-'A']->setStyleSheet(UI::notPresentStyle);
 		}
 	}
 	
 	currLetter = 0;	
 	++attempt;
-	if(matches == ui->wordLength || attempt >= ui->maxAttempts) {
+	if(matches == UI::wordLength || attempt >= UI::maxAttempts) {
 		revealWord();
 		gameOver = true;
 	}
@@ -153,12 +153,10 @@ void WordGuess::revealWord() {
 
 void WordGuess::reset() {
 	for(int i=0; i<26; i++)
-		ui->letterLabel[i]->setStyleSheet("QLabel { background-color : rgb(200, 200, 200)}");
-	for(int i=0; i<ui->maxAttempts; i++) {
-		for(int j=0; j<ui->wordLength; j++) {
-			ui->boardLabel[i*ui->wordLength + j]->setText("");
-			ui->boardLabel[i*ui->wordLength + j]->setStyleSheet("QLabel { background-color : rgb(200, 200, 200)}");
-		}
+		ui->letterLabel[i]->setStyleSheet(UI::defaultStyle);
+	for(int i=0; i<UI::maxAttempts*UI::wordLength; i++) {
+		ui->boardLabel[i]->setText("");
+		ui->boardLabel[i]->setStyleSheet(UI::defaultStyle);
 	}
 	ui->answerFrame->hide();
 	

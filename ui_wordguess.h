@@ -5,9 +5,24 @@
 #include <QFrame>
 #include <QLabel>
 #include <QGridLayout>
+#include <QString>
 
 
 namespace UI {
+
+const int wordLength  = 5;
+const int maxAttempts = 6;
+
+
+const QString defaultStyle = 
+	"QLabel { background-color : rgb(200, 200, 200)}";
+const QString matchStyle =
+	"QLabel { background-color : rgb( 70, 210,  70)}";
+const QString presentStyle =
+	"QLabel { background-color : rgb(210, 210,  70)}";
+const QString notPresentStyle =
+	"QLabel { background-color : rgb(100, 100, 100)}";
+
 
 class WordGuess {
 public:
@@ -54,13 +69,9 @@ public:
 		mainLayout->addWidget(boardFrame,  0, 0, 12, 1);
 		mainLayout->addWidget(letterFrame, 1, 1, 6, 1);
 		mainLayout->addWidget(answerFrame, 8, 1, 4, 1);
-		
 	}
 	
-		   
-	static constexpr int wordLength  = 5;
-	static constexpr int maxAttempts = 6;
-	
+		
 	QGridLayout *mainLayout,
 				*boardLayout,
 				*letterLayout,
