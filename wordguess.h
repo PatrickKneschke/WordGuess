@@ -35,6 +35,7 @@ private:
 	QString 	  	 secretWord;
 	unsigned int  	 attempt,
 				  	 currLetter;
+	bool			 gameOver;
 };
 
 

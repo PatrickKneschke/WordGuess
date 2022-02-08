@@ -13,7 +13,8 @@ WordGuess::WordGuess(QWidget *parent) :
 	ui(new UI::WordGuess),
 	secretWord(""),
 	attempt(0),
-	currLetter(0)
+	currLetter(0),
+	gameOver(false)
 {
 	ui->setupUI(this);
 	init();
@@ -36,7 +37,10 @@ void WordGuess::keyPressEvent(QKeyEvent *event) {
 		return;
 	}
 	if(key == Qt::Key_Return || key == Qt::Key_Enter) {
-		evaluateBoard();
+		if(gameOver)
+			reset();
+		else
+			evaluateBoard();
 		return;
 	}
 	
@@ -53,6 +57,9 @@ void WordGuess::init() {
 	
 	// pull secret word from list
 	nextSecretWord();
+	
+	// hide answer frame
+	ui->answerFrame->hide();
 }
 
 
@@ -106,26 +113,46 @@ void WordGuess::evaluateBoard() {
 		if(curr == secretWord.at(i)) {
 			++matches;
 			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(70, 210, 70)}");
+		ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(70, 210, 70)}");
 		}
 		else if(secretWord.contains(curr)) {
 			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(210, 210, 70)}");
+		ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(210, 210, 70)}");
 		}
+		else {
+			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(100, 100, 100)}");
 		ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(100, 100, 100)}");
+		}
 	}
 	
 	currLetter = 0;	
 	++attempt;
-	if(attempt >= ui->maxAttempts)
+	if(matches == ui->wordLength || attempt >= ui->maxAttempts) {
 		revealWord();
-	
+		gameOver = true;
+	}
 }
 
 
 void WordGuess::revealWord() {
-
+	ui->answerFrame->show();
 }
 
 
 void WordGuess::reset() {
-
+	for(int i=0; i<26; i++)
+		ui->letterLabel[i]->setStyleSheet("QLabel { background-color : rgb(200, 200, 200)}");
+	for(int i=0; i<ui->maxAttempts; i++) {
+		for(int j=0; j<ui->wordLength; j++) {
+			ui->boardLabel[i*ui->wordLength + j]->setText("");
+			ui->boardLabel[i*ui->wordLength + j]->setStyleSheet("QLabel { background-color : rgb(200, 200, 200)}");
+		}
+	}
+	ui->answerFrame->hide();
+	
+	attempt = 0;
+	currLetter = 0;
+	gameOver = false;
+	
+	nextSecretWord();
 }
