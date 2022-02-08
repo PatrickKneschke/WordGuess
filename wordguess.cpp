@@ -103,21 +103,14 @@ void WordGuess::evaluateBoard() {
 	int matches = 0;	
 	for(size_t i=0; i<ui->wordLength; i++) {
 		QChar curr = ui->boardLabel[attempt*ui->wordLength + i]->text().at(0);	
-		
-		qDebug() << curr << secretWord.at(i);
-			
 		if(curr == secretWord.at(i)) {
 			++matches;
-			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(50, 200, 50)}");
-			ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(50, 200, 50)}");
+			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(70, 210, 70)}");
 		}
 		else if(secretWord.contains(curr)) {
-			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(200, 200, 50)}");
-			ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(200, 200, 50)}");
+			ui->boardLabel[attempt*ui->wordLength + i]->setStyleSheet("QLabel { background-color : rgb(210, 210, 70)}");
 		}
-		else {
-			ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(50, 50, 50)}");
-		}
+		ui->letterLabel[curr.unicode()-'A']->setStyleSheet("QLabel { background-color : rgb(100, 100, 100)}");
 	}
 	
 	currLetter = 0;	
