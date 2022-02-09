@@ -28,15 +28,31 @@ class WordGuess {
 public:
 	void setupUI(QWidget *parent = nullptr) {
 		mainLayout   = new QGridLayout();
+		mainLayout->setColumnStretch(0, 1);
+		mainLayout->setColumnStretch(1, 1);
 		
 		boardFrame 	 = new QFrame(parent);
 		boardFrame->setFrameStyle(QFrame::Box);
 		boardFrame->setLineWidth(3);
 		boardLayout  = new QGridLayout(boardFrame);
+		for(int i=0; i<maxAttempts; i++)
+			boardLayout->setRowStretch(i, 1);
+		for(int i=0; i<wordLength; i++)
+			boardLayout->setColumnStretch(i, 1);
+		
 		letterFrame  = new QFrame(parent);
 		letterLayout = new QGridLayout(letterFrame);
+		for(int i=0; i<8; i++)
+			letterLayout->setRowStretch(i, 1);
+		for(int i=0; i<16; i++)
+			letterLayout->setColumnStretch(i, 1);
+		
 		answerFrame  = new QFrame(parent);
 		answerLayout = new QGridLayout(answerFrame);
+		for(int i=0; i<2; i++)
+			letterLayout->setRowStretch(i, 1);
+		for(int i=0; i<5; i++)
+			letterLayout->setColumnStretch(i, 1);
 		
 		// create and place board labels
 		for(int i=0; i<wordLength*maxAttempts; i++) {
@@ -59,19 +75,20 @@ public:
 		//create and place answer labels
 		for(int i=0; i<wordLength; i++) {
 			answerLabel[i] = makeLabel(answerFrame, "", QFrame::Panel | QFrame::Raised, 100, 30);
-			answerLayout->addWidget(answerLabel[i], 1, 2*i, 2, 2);
+			answerLayout->addWidget(answerLabel[i], 1, i);
 		}
 		messageLabel = makeLabel(answerFrame, "Correct Answer:", QFrame::Plain, 75, 20);
-		answerLayout->addWidget(messageLabel, 0, 0, 1, 10);
+		answerLayout->addWidget(messageLabel, 0, 0, 1, 5);
 		
 		// place frames in main layout
 		parent->setLayout(mainLayout);
-		mainLayout->addWidget(boardFrame,  0, 0, 12, 1);
-		mainLayout->addWidget(letterFrame, 1, 1, 4, 1);
-		mainLayout->addWidget(answerFrame, 8, 1, 4, 1);
+		mainLayout->addWidget(boardFrame,  0, 0, 12, 1, Qt::AlignCenter);
+		mainLayout->addWidget(letterFrame, 1, 1,  5, 1, Qt::AlignCenter);
+		mainLayout->addWidget(answerFrame, 7, 1,  4, 1, Qt::AlignCenter);
 		
 		// set default style
 		parent->setStyleSheet(defaultStyle);
+		
 	}
 	
 		
