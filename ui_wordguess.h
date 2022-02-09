@@ -67,8 +67,11 @@ public:
 		// place frames in main layout
 		parent->setLayout(mainLayout);
 		mainLayout->addWidget(boardFrame,  0, 0, 12, 1);
-		mainLayout->addWidget(letterFrame, 1, 1, 6, 1);
+		mainLayout->addWidget(letterFrame, 1, 1, 4, 1);
 		mainLayout->addWidget(answerFrame, 8, 1, 4, 1);
+		
+		// set default style
+		parent->setStyleSheet(defaultStyle);
 	}
 	
 		
